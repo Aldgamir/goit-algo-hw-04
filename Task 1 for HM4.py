@@ -1,30 +1,63 @@
 import timeit
 import random
 
-# Фенкція для подальшого порівняння
-def compare_sorting_algorithms(data): 
+def merge_sort(arr):
+    if len(arr) > 1:
+        mid = len(arr) // 2
+        L = arr[:mid]
+        R = arr[mid:]
 
-    # Сортування злиттям
-    merge_sort_time = timeit.timeit(stmt='sorted(data)', globals=globals(), number=10)
-    print(f"Час сортування злиттям: {merge_sort_time}")
+        merge_sort(L)
+        merge_sort(R)
 
-    # Сортування вставками
-    insertion_sort_time = timeit.timeit(stmt='sorted(data)', globals=globals(), number=10)
-    print(f"Час сортування вставками: {insertion_sort_time}")
+        i = j = k = 0
 
-    # Timsort (вбудований алгоритм сортування в Python)
-    timsort_time = timeit.timeit(stmt='sorted(data)', globals=globals(), number=10)
-    print(f"Час сортування Timsort: {timsort_time}")
+        while i < len(L) and j < len(R):
+            if L[i] < R[j]:
+                arr[k] = L[i]
+                i += 1
+            else:
+                arr[k] = R[j]
+                j += 1
+            k += 1
 
-    if merge_sort_time < insertion_sort_time and merge_sort_time < timsort_time:
-        return "Сортування злиттям"
-    elif insertion_sort_time < merge_sort_time and insertion_sort_time < timsort_time:
-        return "Сортування вставками"
-    else:
-        return "Timsort"
-    
-# Генеруємо великий список випадкових чисел для сортування і порівняння
-data = [random.randint(0, 1000) for _ in range(10000)]
+        while i < len(L):
+            arr[k] = L[i]
+            i += 1
+            k += 1
 
-fastest_algorithm = compare_sorting_algorithms(data)
-print(f"Найшвидший алгоритм сортування: {fastest_algorithm}")
+        while j < len(R):
+            arr[k] = R[j]
+            j += 1
+            k += 1
+
+def insertion_sort(arr):
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        while j >= 0 and key < arr[j]:
+            arr[j + 1] = arr[j]
+            j -= 1
+        arr[j + 1] = key
+
+# Створюємо генератор випадкових значень
+random_data = [random.randint(0, 1000) for _ in range(1000)]
+
+# Сортування злиттям за часом
+merge_sort_time = timeit.timeit('merge_sort(random_data.copy())', globals=globals(), number=100)
+print("Час сортування злиттям:", merge_sort_time)
+
+# Сортування вставки часу
+insertion_sort_time = timeit.timeit('insertion_sort(random_data.copy())', globals=globals(), number=100)
+print("Час сортування вставками:", insertion_sort_time)
+
+# Час Timsort (вбудований алгоритм сортування Python)
+timsort_time = timeit.timeit('sorted(random_data.copy())', globals=globals(), number=100)
+print("Timsort час:", timsort_time)
+
+if merge_sort_time < insertion_sort_time and merge_sort_time < timsort_time:
+    print("Сортування злиттям є найшвидшим алгоритмом сортування")
+elif insertion_sort_time < merge_sort_time and insertion_sort_time < timsort_time:
+    print("Сортування вставками є найшвидшим алгоритмом сортування")
+else:
+    print("Timsort — найшвидший алгоритм сортування")
