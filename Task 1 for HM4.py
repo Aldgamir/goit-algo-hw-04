@@ -43,11 +43,11 @@ def insertion_sort(arr):
 # Створюємо генератор випадкових значень
 random_data = [random.randint(0, 1000) for _ in range(1000)]
 
-# Сортування злиттям за часом
+# Час сортування злиттям
 merge_sort_time = timeit.timeit('merge_sort(random_data.copy())', globals=globals(), number=100)
 print("Час сортування злиттям:", merge_sort_time)
 
-# Сортування вставки часу
+# Час сортуванням вставками
 insertion_sort_time = timeit.timeit('insertion_sort(random_data.copy())', globals=globals(), number=100)
 print("Час сортування вставками:", insertion_sort_time)
 
